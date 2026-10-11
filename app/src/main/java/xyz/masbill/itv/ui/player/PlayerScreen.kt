@@ -33,6 +33,7 @@ fun PlayerScreen(
     Box(modifier = modifier.fillMaxSize()) {
         TvPlayerView(
             streamUrl = channel.streamUrl,
+            headers = channel.headers,
             modifier = Modifier.fillMaxSize()
         )
 

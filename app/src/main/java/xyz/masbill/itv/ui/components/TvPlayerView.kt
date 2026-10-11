@@ -19,13 +19,19 @@ import androidx.media3.ui.PlayerView
 @Composable
 fun TvPlayerView(
     streamUrl: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    headers: Map<String, String> = emptyMap()
 ) {
     val context = LocalContext.current
 
-    val exoPlayer = remember(streamUrl) {
+    val exoPlayer = remember(streamUrl, headers) {
         val dataSourceFactory = DefaultHttpDataSource.Factory()
             .setAllowCrossProtocolRedirects(true)
+            .apply {
+                if (headers.isNotEmpty()) {
+                    setDefaultRequestProperties(headers)
+                }
+            }
 
         val mediaSource = HlsMediaSource.Factory(dataSourceFactory)
             .createMediaSource(MediaItem.fromUri(streamUrl))

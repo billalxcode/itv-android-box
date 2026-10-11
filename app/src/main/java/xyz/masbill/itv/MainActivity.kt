@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.Surface
-import xyz.masbill.itv.data.datasource.SampleChannelDataSource
+import xyz.masbill.itv.data.datasource.M3uChannelDataSource
 import xyz.masbill.itv.data.repository.ChannelRepositoryImpl
 import xyz.masbill.itv.domain.usecase.GetCategoriesUseCase
 import xyz.masbill.itv.domain.usecase.GetChannelsUseCase
@@ -26,8 +26,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Manual Dependency Injection for Clean Architecture
-        val dataSource = SampleChannelDataSource()
+        val dataSource = M3uChannelDataSource()
         val repository = ChannelRepositoryImpl(dataSource)
         val getCategoriesUseCase = GetCategoriesUseCase(repository)
         val getChannelsUseCase = GetChannelsUseCase(repository)
@@ -61,7 +60,7 @@ fun TvAppContent(viewModel: HomeViewModel) {
     if (activeChannel != null) {
         PlayerScreen(
             channel = activeChannel,
-            onBack = { viewModel.closePlayer() },
+            onBack = { viewModel.closePlayer() }
         )
     } else {
         HomeScreen(
