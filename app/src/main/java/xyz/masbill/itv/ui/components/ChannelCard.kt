@@ -1,5 +1,6 @@
 package xyz.masbill.itv.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,11 +9,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,13 +44,68 @@ fun ChannelCard(
             .fillMaxWidth()
             .aspectRatio(16f / 10f)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            AsyncImage(
-                model = channel.logoUrl,
-                contentDescription = channel.name,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFF282C34),
+                            Color(0xFF1E222A)
+                        )
+                    )
+                )
+        ) {
+            if (channel.logoUrl.isNotBlank()) {
+                AsyncImage(
+                    model = channel.logoUrl,
+                    contentDescription = channel.name,
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(20.dp)
+                        .align(Alignment.Center)
+                )
+            } else {
+                // Fallback channel initial avatar
+                Box(
+                    modifier = Modifier
+                        .size(56.dp)
+                        .align(Alignment.Center)
+                        .background(
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = channel.name.take(1).uppercase(),
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 24.sp
+                        ),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
+            // Bottom gradient overlay for title legibility
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .align(Alignment.BottomCenter)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.85f)
+                            )
+                        )
+                    )
             )
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -56,8 +117,9 @@ fun ChannelCard(
                         text = channel.name,
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
+                            fontSize = 15.sp
                         ),
+                        color = Color.White,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -66,6 +128,7 @@ fun ChannelCard(
                         Text(
                             text = channel.description,
                             style = MaterialTheme.typography.bodySmall,
+                            color = Color.LightGray,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
